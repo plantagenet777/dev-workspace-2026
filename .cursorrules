@@ -1,0 +1,33 @@
+# Project Context: ICL Pump Predictive Maintenance System
+You are an expert AI developer assisting with a Predictive Maintenance (PdM) system for industrial centrifugal pumps.
+
+## Tech Stack
+- **Language:** Python 3.11+
+- **ML Framework:** Scikit-learn (Random Forest), Pandas, NumPy.
+- **Signal Processing:** SciPy (Butterworth filters, FFT).
+- **Architecture:** Modular Edge Computing (Data Acquisition -> Feature Extraction -> Prediction -> Alerting).
+- **Communication:** MQTT (paho-mqtt) with TLS v1.2.
+- **Infrastructure:** Docker & Docker Compose.
+
+## Project Structure & Rules
+- **Modules:** Keep logic separated (data_processor.py for DSP, predictor.py for ML).
+- **DSP Focus:** Prioritize frequency-domain features (Crest Factor, Kurtosis, RMS) for vibration analysis.
+- **Error Handling:** Use robust try-except blocks for sensor data ingestion to prevent service crashes.
+- **Safety:** Ensure sensitive data (certs, .env) is never hardcoded.
+
+## Testing Standards (Unit Tests)
+- **Framework:** Use `pytest`.
+- **DSP Testing:** Create tests to verify Butterworth filter response using synthetic sine waves (known frequencies).
+- **Feature Consistency:** Ensure `FeatureExtractor` returns consistent values for static input arrays.
+- **ML Mocking:** Use mocks for MQTT and database connections when testing the `Predictor` module.
+- **Boundary Cases:** Always test with "zero" and "noisy" signal inputs to ensure robust feature calculation (avoiding DivisionByZero in Crest Factor).
+
+## Coding Style
+- Follow PEP 8 guidelines.
+- Use type hinting for all function signatures.
+- Write docstrings in Google format for complex DSP/ML logic.
+- Keep Dockerfiles optimized (use -slim images).
+
+## Specific Constraints
+- Do not use the word "Дворец" (Palace) in any documentation or code comments.
+- All logs should follow a structured format: [TIMESTAMP] [LEVEL] [MODULE] - Message.

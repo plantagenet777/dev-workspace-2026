@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.git
+.vscode
+venv/
+.venv
+notebooks/
+# Исключаем локальные сертификаты, они должны монтироваться через Volume
+certs/*
+!certs/.gitkeep
