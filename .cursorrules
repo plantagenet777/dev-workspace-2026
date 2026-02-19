@@ -29,5 +29,4 @@ You are an expert AI developer assisting with a universal Predictive Maintenance
 - Keep Dockerfiles optimized (use -slim images).
 
 ## Specific Constraints
-- Do not use the word "Дворец" (Palace) in any documentation or code comments.
 - All logs should follow a structured format: [TIMESTAMP] [LEVEL] [MODULE] - Message.

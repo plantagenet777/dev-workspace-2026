@@ -432,7 +432,7 @@ class VibrationZoneRule(Rule):
                 and not is_temp
             ):
                 ctx.reason = getattr(Config, "VIBRATION_ZONE_D_ALERT_MESSAGE", "")
-            # Zone D вибрация всегда считается как минимум ALARM-причиной
+            # Zone D vibration is always treated as at least an ALARM-level cause
             if AlarmCause.VIB_ZONE_D not in ctx.alarm_causes:
                 ctx.alarm_causes.append(AlarmCause.VIB_ZONE_D)
         else:
@@ -522,7 +522,7 @@ class InterlockRule(Rule):
                 ctx.reason is None or "HIGH TEMPERATURE" not in ctx.reason
             ) and ctx.reason != Config.CAVITATION_ALERT_MESSAGE:
                 ctx.reason = getattr(Config, "VIBRATION_INTERLOCK_ALERT_MESSAGE", "")
-            # Trip по вибрационному интерлоку только если ещё не выбран более приоритетный trip_cause
+            # Trip on vibration interlock only if no higher-priority trip_cause has been set yet
             if ctx.trip_cause is None:
                 ctx.trip_cause = TripCause.VIB_INTERLOCK
             if AlarmCause.VIB_INTERLOCK not in ctx.alarm_causes:
