@@ -243,6 +243,8 @@ cp .env.example .env
 
 ### 3. Train the model
 
+Model artifacts (`pump_rf_*.joblib`, `scaler_*.joblib`) are not in the repo; generate them before first run:
+
 ```bash
 make train
 # or: PYTHONPATH=. python3 train_and_save.py
