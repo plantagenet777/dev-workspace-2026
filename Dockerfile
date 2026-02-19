@@ -1,29 +1,30 @@
-# Используем стабильный образ
+# Stable base image
 FROM python:3.11-slim
 
-# Установка системных зависимостей для сборки (если понадобятся для scipy/numpy)
+# Build dependencies for scipy/numpy
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Сначала копируем зависимости для кэширования слоев
+# Install dependencies first for layer caching
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Копируем код приложения
+# Copy application code
 COPY . .
 
-# Создаем папки для логов и данных
+# Create directories for logs, data, certs, models
 RUN mkdir -p logs data certs models
 
-# Обучаем модель при сборке образа (если models/ пуст)
+# Train model at build time (if models/ is empty)
 RUN python train_and_save.py
 
-# Указываем Python не создавать файлы .pyc внутри контейнера
+# Avoid .pyc and unbuffered output
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV PYTHONPATH=/app
 
-# Запускаем проверку и основное приложение
+# Run smoke test then main application
 CMD ["sh", "-c", "python tests/test_smoke.py && python app/main_app.py"]

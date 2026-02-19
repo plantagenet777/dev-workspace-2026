@@ -1,22 +1,22 @@
 #!/bin/bash
 
-echo "🚢 Starting ICL Pump Monitor Deployment..."
+echo "🚢 Starting Pump Predictive Maintenance Deployment..."
 
-# 1. Сборка Docker-образа
-docker build -t icl-predictive-pumps:v1.0 .
+# 1. Build Docker image
+docker build -t pump-predictive-maintenance:v1.0 .
 
-# 2. Остановка старого контейнера, если он есть
-docker stop icl_monitor || true
-docker rm icl_monitor || true
+# 2. Stop and remove old container if present
+docker stop pump_monitor || true
+docker rm pump_monitor || true
 
-# 3. Запуск нового контейнера с монтированием сертификатов
-# Мы используем --restart always для отказоустойчивости
+# 3. Run new container with certificates mounted
+# --restart always for resilience
 docker run -d \
-  --name icl_monitor \
+  --name pump_monitor \
   --restart always \
-  -v /etc/icl/certs:/app/certs:ro \
+  -v /etc/pump-monitor/certs:/app/certs:ro \
   -v ./logs:/app/logs \
   --env-file .env \
-  icl-predictive-pumps:v1.0
+  pump-predictive-maintenance:v1.0
 
 echo "✅ Deployment finished. System is running in background."

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-MQTT Telemetry Simulator — публикация тестовой телеметрии насоса на брокер.
-Использование: PYTHONPATH=. python publish_mqtt_telemetry.py [--mode normal|failure]
+MQTT Telemetry Simulator: publish test pump telemetry to the broker.
+Usage: PYTHONPATH=. python publish_mqtt_telemetry.py [--mode normal|failure]
 """
 import argparse
 import json
@@ -17,20 +17,38 @@ from config.config import Config
 
 
 def generate_telemetry(mode: str = "normal") -> dict:
-    """Генерация одной записи телеметрии."""
+    """Generate one telemetry record."""
     if mode == "failure":
-        return {
-            "vib_rms": random.gauss(8.5, 1.5),
-            "current": random.gauss(56, 5),
-            "pressure": random.gauss(3.5, 0.8),
-            "temp": random.gauss(72, 8),
-        }
-    # normal
+        vib_rms = random.gauss(8.5, 1.5)
+        current = random.gauss(56, 5)
+        pressure = random.gauss(3.5, 0.8)
+        temp = random.gauss(72, 8)
+    else:
+        vib_rms = random.gauss(2.5, 0.4)
+        current = random.gauss(45, 2)
+        pressure = random.gauss(6.0, 0.3)
+        temp = random.gauss(38, 3)
+
+    # Simple synthetic higher-order vibration metrics and cavitation index so that
+    # DataProcessor.prepare_batch / FeatureExtractor and rules can operate without
+    # special cases. These values are plausible but not derived from a full waveform.
+    vib_crest = max(2.0, abs(vib_rms) * random.uniform(1.5, 2.5))
+    vib_kurtosis = (
+        random.uniform(2.5, 4.5) if abs(vib_rms) < 5.0 else random.uniform(3.5, 6.5)
+    )
+
+    # Cavitation index proxy: higher when pressure drops and current rises.
+    base_index = max(0.0, 1.0 + (45.0 - pressure) * 0.2 + (current - 45.0) * 0.02)
+    cavitation_index = round(max(0.0, base_index), 3)
+
     return {
-        "vib_rms": random.gauss(2.5, 0.4),
-        "current": random.gauss(45, 2),
-        "pressure": random.gauss(6.0, 0.3),
-        "temp": random.gauss(38, 3),
+        "vib_rms": vib_rms,
+        "vib_crest": vib_crest,
+        "vib_kurtosis": vib_kurtosis,
+        "current": current,
+        "pressure": pressure,
+        "temp": temp,
+        "cavitation_index": cavitation_index,
     }
 
 
@@ -40,19 +58,19 @@ def main():
         "--mode",
         choices=["normal", "failure"],
         default="normal",
-        help="Режим симуляции: normal (здоровый) или failure (аномалия)",
+        help="Simulation mode: normal (healthy) or failure (anomaly)",
     )
     parser.add_argument(
         "--interval",
         type=float,
         default=1.0,
-        help="Интервал публикации в секундах (по умолчанию 1 Гц)",
+        help="Publish interval in seconds (default 1 Hz)",
     )
     parser.add_argument(
         "--count",
         type=int,
         default=0,
-        help="Количество сообщений (0 = бесконечно)",
+        help="Number of messages (0 = infinite)",
     )
     args = parser.parse_args()
 
@@ -61,13 +79,14 @@ def main():
     if Config.MQTT_USE_TLS:
         try:
             import ssl
+
             client.tls_set(
                 ca_certs=Config.CA_CERT,
                 certfile=Config.CLIENT_CERT,
                 keyfile=Config.CLIENT_KEY,
                 tls_version=ssl.PROTOCOL_TLSv1_2,
             )
-            client.tls_insecure_set(True)
+            client.tls_insecure_set(Config.MQTT_TLS_INSECURE)
         except Exception as e:
             print(f"[FATAL] TLS Error: {e}")
             sys.exit(1)

@@ -2,7 +2,7 @@ name: Python CI/CD Pipeline
 
 on:
   push:
-    branches: [ main ]  # Запускать при каждом push в ветку main
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -23,13 +23,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Train model (for smoke test)
+        run: |
+          export PYTHONPATH=$PYTHONPATH:.
+          python train_and_save.py
+
       - name: Run Pytest
         run: |
           export PYTHONPATH=$PYTHONPATH:.
           pytest tests/ -v
 
   docker-build:
-    needs: test  # Сборка начнется только если тесты прошли
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
