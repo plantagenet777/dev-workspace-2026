@@ -39,7 +39,7 @@ Typical deployment scenario:
 - **Rule-based diagnostics:** Debris impact (stone hit), cavitation, choked discharge, degradation (impeller wear), temperature/overload/pressure, air ingestion; each with a dedicated alert message.
 - **ML inference:** Random Forest classifier (8 features: vib_rms, vib_crest, vib_kurtosis, current, pressure, cavitation_index, temp, temp_delta); rolling smoothing and asymmetric risk smoothing.
 - **Signal processing:** Butterworth filter (configurable); overall RMS over feature window; optional band alignment for strict ISO (see docs).
-- **Shutdown scenarios (simulation/digital twin):** Vibration interlock (V ≥ 7.1 mm/s), Debris impact, Choked discharge, Cavitation (sustained 10 s), Overtemperature (T ≥ 75°C sustained); each logs a row and triggers “RESTART” in the digital twin.
+- **Shutdown scenarios (simulation/digital twin):** Vibration interlock (V ≥ 9.0 mm/s), Debris impact, Choked discharge, Cavitation (sustained 10 s), Overtemperature (T ≥ 75°C sustained); each logs a row and triggers “RESTART” in the digital twin.
 - **Startup handling:** First 3 inference runs use higher CRITICAL threshold (0.90) to reduce false alerts.
 - **Security:** TLS v1.2 for MQTT; secrets via environment variables only.
 - **Telegram:** Optional alerts for CRITICAL/WARNING with reason text.
@@ -153,7 +153,7 @@ Vibration velocity (`vib_rms`) is assumed to be measured at **bearing housing or
 | B      | V < 4.5           | Acceptable | Exit WARNING when V < 4.5 |
 | C      | 4.5 ≤ V < 7.1     | WARNING  | Operational entry at 5.5 + risk ≥ 15% to reduce flicker |
 | D      | V ≥ 7.1           | CRITICAL | Unacceptable; message: reduce load or stop for inspection |
-| Interlock | V > 11.0       | Shutdown | Emergency stop (plant limit) |
+| Interlock | V ≥ 9.0 (default) | Shutdown | Vibration interlock; stop and inspect (config: VIBRATION_INTERLOCK_MMPS) |
 
 Boundary 7.1 belongs to Zone D only. See `config/config.py` and [docs/en/ARCHITECTURE.md](docs/en/ARCHITECTURE.md).
 

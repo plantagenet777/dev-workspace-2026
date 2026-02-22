@@ -32,7 +32,7 @@ def add_vibration_iso_bands(ax: plt.Axes) -> None:
     """Draw ISO 10816-3 zone bands on a vibration (mm/s) y-axis."""
     vb = Config.VIBRATION_WARNING_MMPS  # 4.5 Zone C start
     vc = Config.VIBRATION_CRITICAL_MMPS  # 7.1 Zone D
-    vint = Config.VIBRATION_INTERLOCK_MMPS  # 7.1 Zone D
+    vint = Config.VIBRATION_INTERLOCK_MMPS  # 9.0 interlock (above Zone D)
     y_max = max(ax.get_ylim()[1], vint * 1.1)
     ax.set_ylim(0, y_max)
 
