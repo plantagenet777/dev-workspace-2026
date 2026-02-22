@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Load variables from .env file when present
+# Load variables from .env file when present (config package)
 load_dotenv()
 
 
