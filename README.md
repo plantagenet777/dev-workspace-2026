@@ -367,3 +367,5 @@ Uses `logs/telemetry_history.csv` (or `LOG_DIR`); shows vibration zones (B/C/D/v
 ## Author
 
 Dmitrii German
+
+<!-- PdM repo -->

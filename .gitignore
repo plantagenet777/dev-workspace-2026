@@ -221,3 +221,5 @@ models/*.joblib
 
 # Generated ML report (run `make train` to produce models/ml_report.txt)
 models/ml_report.txt
+
+# PdM project

@@ -11,3 +11,4 @@ repos:
     rev: 23.12.1
     hooks:
     -   id: black               # Format Python code
+# PdM: pre-commit hooks

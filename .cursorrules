@@ -30,3 +30,5 @@ You are an expert AI developer assisting with a universal Predictive Maintenance
 
 ## Specific Constraints
 - All logs should follow a structured format: [TIMESTAMP] [LEVEL] [MODULE] - Message.
+
+<!-- PdM project rules -->
