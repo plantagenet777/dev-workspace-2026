@@ -1,5 +1,5 @@
 .PHONY: install train test simulate simulate-standalone docker-up docker-down clean help status logs rebuild
-
+# PdM targets
 # Install dependencies
 install:
 	pip install -r requirements.txt
