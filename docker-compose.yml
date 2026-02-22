@@ -1,3 +1,4 @@
+# PdM stack: pump_monitor + mosquitto
 services:
   # Main monitoring service
   pump_monitor:

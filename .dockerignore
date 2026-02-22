@@ -11,3 +11,4 @@ notebooks/
 # Exclude local certs; they should be mounted via volume
 certs/*
 !certs/.gitkeep
+# PdM: build context
