@@ -182,3 +182,5 @@ Optional plots from `plot_monitoring.py` (vibration zones and risk over time):
 - [system_trigger_scenarios.md](system_trigger_scenarios.md) — all trigger scenarios and thresholds
 - [RULE_PRIORITY_AND_HYSTERESIS.md](RULE_PRIORITY_AND_HYSTERESIS.md) — rule priority and hysteresis
 - [ML_REPORT.md](ML_REPORT.md) — ML model, validation metrics, feature importance
+
+<!-- PdM docs -->
