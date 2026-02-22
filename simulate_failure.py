@@ -1,5 +1,5 @@
 """
-Simulate Warman-type pump operation in industrial conditions.
+PdM: Simulate Warman-type pump operation in industrial conditions.
 Aligned with ISO 10816-3; zone thresholds (e.g. VIBRATION_WARNING_MMPS, VIBRATION_CRITICAL_MMPS)
 are defined in config.config.Config.
 

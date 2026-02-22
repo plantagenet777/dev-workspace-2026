@@ -1,5 +1,5 @@
 """
-Monitoring visualization: telemetry vs time with ISO 10816-3 zones and parameter relationships.
+PdM: Monitoring visualization: telemetry vs time with ISO 10816-3 zones and parameter relationships.
 Plots vibration with zone bands (B/C/D), risk score, process parameters, and 2D relationship views.
 """
 import pandas as pd

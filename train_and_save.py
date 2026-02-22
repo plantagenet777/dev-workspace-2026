@@ -1,5 +1,5 @@
 """
-Train Random Forest classifier for pump predictive maintenance.
+PdM: Train Random Forest classifier for pump predictive maintenance.
 Synthetic zones aligned with simulate_failure.py and ISO 10816-3; zone thresholds
 and HEALTHY_MEANS / WARNING_MEANS / CRITICAL_MEANS are in config.config.Config.
 Produces model, scaler, and an ML metrics report (models/ml_report.txt).

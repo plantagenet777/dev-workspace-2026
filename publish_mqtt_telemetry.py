@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-MQTT Telemetry Simulator: publish test pump telemetry to the broker.
+PdM: MQTT Telemetry Simulator: publish test pump telemetry to the broker.
 Usage: PYTHONPATH=. python publish_mqtt_telemetry.py [--mode normal|failure]
 """
 import argparse

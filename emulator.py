@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pump telemetry emulator: publish data to MQTT for local sandbox.
+"""PdM: Pump telemetry emulator: publish data to MQTT for local sandbox.
 
 Uses Config (MQTT_BROKER, MQTT_PORT, TOPIC_TELEMETRY). When running on host
 with docker-compose up, set in .env: MQTT_BROKER=localhost, MQTT_PORT=1883.
