@@ -327,9 +327,9 @@ Standalone script: `./deploy.sh`. Certificates mounted at `CERT_DIR`; healthchec
 
 ## Documentation
 
-- **docs/en/** (English) — [ARCHITECTURE](docs/en/ARCHITECTURE.md), [system_trigger_scenarios](docs/en/system_trigger_scenarios.md), [RULE_PRIORITY_AND_HYSTERESIS](docs/en/RULE_PRIORITY_AND_HYSTERESIS.md), [ML_REPORT](docs/en/ML_REPORT.md); simulation screenshots linked from ARCHITECTURE.
-- **docs/ru/** (русский) — те же документы на русском: архитектура, сценарии срабатывания, приоритет правил и гистерезис, ML-отчёт.
-- **docs/he/** (עברית) — אותן מסמכים בעברית: ארכיטקטורה, תרחישי טריגר, עדיפות כללים והיסטרזיס, דוח ML.
+- **docs/en/** (English) — [ARCHITECTURE](docs/en/ARCHITECTURE.md), [system_trigger_scenarios](docs/en/system_trigger_scenarios.md), [RULE_PRIORITY_AND_HYSTERESIS](docs/en/RULE_PRIORITY_AND_HYSTERESIS.md), [ML_REPORT](docs/en/ML_REPORT.md), [LSTM and PINN recommendations](docs/en/LSTM_AND_PINN_RECOMMENDATIONS.md); simulation screenshots linked from ARCHITECTURE.
+- **docs/ru/** (русский) — те же документы на русском: архитектура, сценарии срабатывания, приоритет правил и гистерезис, ML-отчёт; [рекомендации по LSTM и PINN](docs/ru/LSTM_И_PINN_РЕКОМЕНДАЦИИ.md).
+- **docs/he/** (עברית) — אותן מסמכים בעברית: ארכיטקטורה, תרחישי טריגר, עדיפות כללים והיסטרזיס, דוח ML; [המלצות LSTM ו-PINN](docs/he/LSTM_AND_PINN_RECOMMENDATIONS.md).
 
 ---
 
