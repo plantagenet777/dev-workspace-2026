@@ -180,3 +180,4 @@ flowchart LR
 - [system_trigger_scenarios.md](system_trigger_scenarios.md) — כל תרחישי הטריגר והספים
 - [RULE_PRIORITY_AND_HYSTERESIS.md](RULE_PRIORITY_AND_HYSTERESIS.md) — עדיפות כללים והיסטרזיס
 - [ML_REPORT.md](ML_REPORT.md) — מודל ML, מדדי ולידציה, חשיבות תכונות
+- בעתיד: שילוב עם Grafana (ייצוא מדדים ואירועים ל-TSDB/Prometheus ובניית לוחות Grafana עבור אזורי רעידות, סיכון וסיבות טריפ) במקום קריאה ישירה מ-CSV וגרפים מקומיים ב-`plot_monitoring.py`.

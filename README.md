@@ -222,6 +222,10 @@ Example output of the **digital twin** (`make simulate`) and **monitoring plots*
 | Plot: vibration zones and risk | ![Figure_1](screenshots/Figure_1.png) |
 | Plot: risk over time | ![Figure_2](screenshots/Figure_2.png) |
 
+### Future: Grafana-based monitoring
+
+For production deployments, prefer exporting metrics and events (vibration zones, risk score, trip causes) to a time-series database (for example Prometheus or InfluxDB) and building Grafana dashboards, rather than relying only on local CSV + matplotlib plots. The current `plot_monitoring.py` script and screenshots are intended for development, tuning, and operator training; they can later be replaced by Grafana panels that show long-term trends and alarm history.
+
 ---
 
 ## Quick Start

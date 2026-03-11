@@ -180,3 +180,4 @@ flowchart LR
 - [system_trigger_scenarios.md](system_trigger_scenarios.md) — все сценарии срабатывания и пороги
 - [RULE_PRIORITY_AND_HYSTERESIS.md](RULE_PRIORITY_AND_HYSTERESIS.md) — приоритет правил и гистерезис
 - [ML_REPORT.md](ML_REPORT.md) — ML-модель, метрики, важность признаков
+- В перспективе: интеграция с Grafana (экспорт метрик и событий в TSDB/Prometheus и построение дашбордов по вибрационным зонам, риску и причинам срабатывания) вместо прямого чтения CSV и локальных графиков в `plot_monitoring.py`.
