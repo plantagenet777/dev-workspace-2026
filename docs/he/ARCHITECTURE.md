@@ -58,7 +58,7 @@ sequenceDiagram
     participant Pred as Predictor
     participant Rules as rules.py
     participant CSV as csv_logger
-    participant Out as MQTT/Telegram
+    participant Out as MQTT/Grafana/TSDB
 
     MQTT->>App: הודעות טלמטריה
     App->>App: buffer.append (מקס 30)
@@ -74,7 +74,7 @@ sequenceDiagram
     Rules-->>Pred: status, reason, display_prob
     Pred->>CSV: append_telemetry (תור)
     Pred-->>App: status, prob
-    App->>Out: פרסום דוח, Telegram אם CRITICAL/WARNING
+    App->>Out: פרסום דוח ל-MQTT וייצוא מדדים/אירועים ל-Grafana/TSDB כאשר CRITICAL/WARNING
     App->>CSV: append_alert (תור)
     CSV->>CSV: כתיבה ברקע עם ניסיון חוזר
 ```
@@ -168,7 +168,7 @@ flowchart LR
 | **app/predictor.py** | טעינת מודל/scaler, החלקת סיכון, ארגון כללים, רישום ל-CSV (דרך תור) |
 | **app/rules.py** | מחלקות כלל (Mechanical, Cavitation, Choked, Degradation, Temperature, Overload, Pressure, Air, Vibration, Interlock, FinalCleanup) |
 | **app/csv_logger.py** | תור כתיבת CSV עם ניסיון חוזר בשגיאה |
-| **app/notifier.py** | משלוח התראות ל-Telegram |
+| **app/notifier.py** | משלוח התראות (Telegram למגרש/דמו, בעתיד חיבור ל-Grafana/TSDB) |
 | **app/healthcheck.py** | אימות config וארטיפקטים; exit 0/1 לבדיקות Docker/CI |
 | **config/config.py** | ספים, נושאים, נתיבים, דגלי TLS |
 | **config/validation.py** | אימות config בהפעלה; בשימוש ב-healthcheck |

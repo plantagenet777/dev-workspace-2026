@@ -65,7 +65,7 @@ Rules are executed **strictly in list order**. The first rule that sets cause (`
                     Final cleanup (min risk, replace MAINTENANCE when CRITICAL)
                                         |
                                         v
-                              [Status and reason for MQTT/CSV/Telegram]
+                              [Status and reason for MQTT/CSV/Grafana/TSDB]
 ```
 
 ---

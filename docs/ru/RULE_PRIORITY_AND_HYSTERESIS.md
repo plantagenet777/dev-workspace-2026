@@ -65,7 +65,7 @@
                     Финальная очистка (мин. риск, замена MAINTENANCE при CRITICAL)
                                         |
                                         v
-                              [Статус и причина для MQTT/CSV/Telegram]
+                              [Статус и причина для MQTT/CSV/Grafana/TSDB]
 ```
 
 ---

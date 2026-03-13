@@ -58,7 +58,7 @@ sequenceDiagram
     participant Pred as Predictor
     participant Rules as rules.py
     participant CSV as csv_logger
-    participant Out as MQTT/Telegram
+    participant Out as MQTT/Grafana/TSDB
 
     MQTT->>App: telemetry messages
     App->>App: buffer.append (max 30)
@@ -74,7 +74,7 @@ sequenceDiagram
     Rules-->>Pred: status, reason, display_prob
     Pred->>CSV: append_telemetry (queue)
     Pred-->>App: status, prob
-    App->>Out: publish report, Telegram if CRITICAL/WARNING
+    App->>Out: publish report to MQTT alerts topic and export metrics/events to Grafana/TSDB when CRITICAL/WARNING
     App->>CSV: append_alert (queue)
     CSV->>CSV: background write with retry
 ```
@@ -170,7 +170,7 @@ Optional plots from `plot_monitoring.py` (vibration zones and risk over time):
 | **app/predictor.py** | Model/scaler loading, risk smoothing, rule orchestration, telemetry logging to CSV (via queue) |
 | **app/rules.py** | Rule classes (Mechanical, Cavitation, Choked, Degradation, Temperature, Overload, Pressure, Air, Vibration, Interlock, FinalCleanup) |
 | **app/csv_logger.py** | CSV write queue with retry on error (telemetry_history, alerts_history) |
-| **app/notifier.py** | Telegram alert delivery |
+| **app/notifier.py** | Alert delivery (legacy Telegram, future Grafana/TSDB hooks) |
 | **app/healthcheck.py** | Config and artifact validation; exit 0/1 for Docker/CI health checks |
 | **config/config.py** | Thresholds, topics, paths, TLS flags |
 | **config/validation.py** | Config validation at startup (fail-fast); used by healthcheck |

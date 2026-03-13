@@ -8,7 +8,7 @@
 
 ## Overview
 
-A **predictive maintenance (PdM)** system for industrial centrifugal pumps, aligned with **ISO 10816-3** vibration zones and tailored for **Warman-type slurry pumps**. Consumes telemetry over MQTT, applies DSP and ML, and raises rule-based and model-based alerts. Supports automatic shutdown scenarios (vibration interlock, debris impact, choked discharge, cavitation, overtemperature) and optional Telegram notifications.
+A **predictive maintenance (PdM)** system for industrial centrifugal pumps, aligned with **ISO 10816-3** vibration zones and tailored for **Warman-type slurry pumps**. Consumes telemetry over MQTT, applies DSP and ML, and raises rule-based and model-based alerts. Supports automatic shutdown scenarios (vibration interlock, debris impact, choked discharge, cavitation, overtemperature) and optional alerting channels (legacy Telegram for sandbox/demo, future Grafana-based dashboards in production).
 
 ### Example industrial use case
 
@@ -57,7 +57,7 @@ Typical deployment scenario:
 │   ├── rules.py              # Rule classes (Mechanical, Cavitation, Choked, Degradation, …)
 │   ├── telemetry_validator.py # Min/max validation before DSP/ML
 │   ├── csv_logger.py         # CSV write queue (telemetry_history, alerts_history)
-│   ├── notifier.py           # Telegram alerts
+│   ├── notifier.py           # Alert notifier (legacy Telegram, future Grafana/TSDB hooks)
 │   ├── logger.py             # Structured logging and rotation
 │   └── healthcheck.py        # Config/artifact validation; Docker health check
 ├── config/
@@ -102,7 +102,7 @@ Typical deployment scenario:
                                              │           │           │
                                        [ ML + Rules ] [ DSP ] [ CSV Logs ]
                                              │
-                                       [ Telegram Alert ]
+                                       [ Grafana / TSDB ]
 ```
 
 - **Feature window:** 30 samples per batch for stable vibration metrics (RMS, Crest Factor, Kurtosis).
@@ -110,6 +110,10 @@ Typical deployment scenario:
 - **Rolling smoothing:** Last 3 feature vectors averaged before prediction (`SMOOTHING_WINDOW_SIZE=3`); risk history size 3; asymmetric alpha for rise/fall.
 - **Startup:** First 3 runs use CRITICAL threshold 0.90 to avoid false positives.
 - **Rules (priority order):** Mechanical/debris → Cavitation → Choked → Degradation → Temperature → Overload → Pressure → Air ingestion → Vibration Zone C/D → Vibration interlock (V ≥ 9.0 mm/s by default, above Zone D).
+
+### Future: Grafana-based alerts
+
+In production, the recommended alerting pipeline is to export PdM events and metrics (status, risk score, trip causes) to a time-series backend such as Prometheus/TSDB and define alert rules in Alertmanager, with Grafana dashboards for visualization and drill-down. The existing MQTT alerts topic and optional Telegram notifications are intended primarily for sandbox/demo usage and can later be wired into the same Prometheus/Alertmanager/Grafana stack.
 
 ---
 
@@ -300,8 +304,8 @@ make simulate
 | PUMP_ID           | Pump/asset identifier                             | PUMP_01          |
 | SECTION_ID        | Plant section identifier                          | PLANT_SECTION_01 |
 | MODEL_VERSION     | Model artifact version (e.g. v1)                 | v1               |
-| TG_TOKEN          | Telegram bot token                               | —                |
-| TG_CHAT_ID        | Telegram chat ID for alerts                      | —                |
+| TG_TOKEN          | Telegram bot token (optional; sandbox/demo only)                               | —                |
+| TG_CHAT_ID        | Telegram chat ID for alerts (optional; sandbox/demo only)                      | —                |
 | CERT_DIR          | Path to TLS certificates                          | certs/           |
 | LOG_DIR           | Directory for logs and CSV                        | logs/            |
 | STRICT_ARTIFACT_CHECK | If `true`, fail startup when model/scaler missing (default: false) | false   |

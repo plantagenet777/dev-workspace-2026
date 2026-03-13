@@ -58,7 +58,7 @@ sequenceDiagram
     participant Pred as Predictor
     participant Rules as rules.py
     participant CSV as csv_logger
-    participant Out as MQTT/Telegram
+    participant Out as MQTT/Grafana/TSDB
 
     MQTT->>App: сообщения телеметрии
     App->>App: buffer.append (макс 30)
@@ -74,7 +74,7 @@ sequenceDiagram
     Rules-->>Pred: status, reason, display_prob
     Pred->>CSV: append_telemetry (очередь)
     Pred-->>App: status, prob
-    App->>Out: публикация отчёта, Telegram при CRITICAL/WARNING
+    App->>Out: публикация отчёта в MQTT-топик алертов и экспорт метрик/событий в Grafana/TSDB при CRITICAL/WARNING
     App->>CSV: append_alert (очередь)
     CSV->>CSV: фоновая запись с повтором
 ```
@@ -168,7 +168,7 @@ flowchart LR
 | **app/predictor.py** | Загрузка модели/скалера, сглаживание риска, оркестрация правил, запись в CSV через очередь |
 | **app/rules.py** | Классы правил (Mechanical, Cavitation, Choked, Degradation, Temperature, Overload, Pressure, Air, Vibration, Interlock, FinalCleanup) |
 | **app/csv_logger.py** | Очередь записи CSV с повтором при ошибке |
-| **app/notifier.py** | Отправка алертов в Telegram |
+| **app/notifier.py** | Отправка алертов (наследованный Telegram, в перспективе хуки в Grafana/TSDB) |
 | **app/healthcheck.py** | Проверка конфига и артефактов; exit 0/1 для Docker/CI |
 | **config/config.py** | Пороги, топики, пути, флаги TLS |
 | **config/validation.py** | Валидация конфига при старте; используется healthcheck |
