@@ -27,7 +27,7 @@ flowchart TB
         MQTT_A[MQTT Alerts Topic]
         CSV_T[telemetry_history.csv]
         CSV_A[alerts_history.csv]
-        TG[Telegram]
+        GRAF[Grafana / TSDB]
     end
 
     MQTT --> BUF
@@ -42,7 +42,7 @@ flowchart TB
     PRED --> MQTT_A
     CSV --> CSV_T
     CSV --> CSV_A
-    PRED --> TG
+    PRED --> GRAF
 ```
 
 ---

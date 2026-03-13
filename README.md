@@ -42,7 +42,7 @@ Typical deployment scenario:
 - **Shutdown scenarios (simulation/digital twin):** Vibration interlock (V ≥ 9.0 mm/s), Debris impact, Choked discharge, Cavitation (sustained 10 s), Overtemperature (T ≥ 75°C sustained); each logs a row and triggers “RESTART” in the digital twin.
 - **Startup handling:** First 3 inference runs use higher CRITICAL threshold (0.90) to reduce false alerts.
 - **Security:** TLS v1.2 for MQTT; secrets via environment variables only.
-- **Telegram:** Optional alerts for CRITICAL/WARNING with reason text.
+- **Alerts & monitoring:** Optional Telegram alerts for CRITICAL/WARNING with reason text in sandbox/demo; for production deployments prefer exporting metrics/events to a TSDB (e.g. Prometheus/InfluxDB) and building Grafana dashboards (see ARCHITECTURE docs).
 
 ---
 
