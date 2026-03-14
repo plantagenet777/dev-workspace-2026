@@ -8,6 +8,7 @@ import json
 import random
 import time
 import sys
+from collections import deque
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -17,7 +18,10 @@ from config.config import Config
 
 
 def generate_telemetry(mode: str = "normal") -> dict:
-    """Generate one telemetry record."""
+    """Generate one telemetry record.
+
+    NOTE: sensor data generation logic is intentionally left unchanged.
+    """
     if mode == "failure":
         vib_rms = random.gauss(8.5, 1.5)
         current = random.gauss(56, 5)
@@ -52,7 +56,7 @@ def generate_telemetry(mode: str = "normal") -> dict:
     }
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="MQTT Telemetry Simulator")
     parser.add_argument(
         "--mode",
@@ -74,7 +78,14 @@ def main():
     )
     args = parser.parse_args()
 
+    # Local buffer for offline data (when broker is temporarily unavailable).
+    buffer: deque[str] = deque(maxlen=1000)
+
     client = mqtt.Client(client_id=f"{Config.PUMP_ID}_simulator", clean_session=True)
+
+    # Last Will and Testament: status topic reports "offline" if this script dies.
+    status_topic = getattr(Config, "TOPIC_STATUS", "pump/status")
+    client.will_set(status_topic, payload="offline", qos=1, retain=True)
 
     if Config.MQTT_USE_TLS:
         try:
@@ -91,15 +102,34 @@ def main():
             print(f"[FATAL] TLS Error: {e}")
             sys.exit(1)
 
-    def on_connect(c, userdata, flags, rc):
+    def on_connect(c: mqtt.Client, userdata, flags, rc: int) -> None:
         if rc == 0:
             print(f"✅ Connected to {Config.MQTT_BROKER}:{Config.MQTT_PORT}")
+            # Mark simulator as online.
+            c.publish(status_topic, payload="online", qos=1, retain=True)
+            # Flush buffered messages collected while offline.
+            while buffer:
+                payload_str = buffer.popleft()
+                c.publish(Config.TOPIC_TELEMETRY, payload_str, qos=1)
         else:
             print(f"❌ Connection failed: {rc}")
 
     client.on_connect = on_connect
+
+    # Connect and start network loop in background.
     client.connect(Config.MQTT_BROKER, Config.MQTT_PORT, Config.MQTT_KEEPALIVE)
     client.loop_start()
+
+    def safe_send(payload: dict) -> None:
+        """Publish safely: send immediately if connected, otherwise buffer.
+
+        The payload (sensor data) is not modified here.
+        """
+        payload_str = json.dumps(payload)
+        if client.is_connected():
+            client.publish(Config.TOPIC_TELEMETRY, payload_str, qos=1)
+        else:
+            buffer.append(payload_str)
 
     print(f"📤 Publishing telemetry (mode={args.mode}, interval={args.interval}s)...")
     print(f"   Topic: {Config.TOPIC_TELEMETRY}")
@@ -109,7 +139,7 @@ def main():
     try:
         while args.count == 0 or sent < args.count:
             payload = generate_telemetry(args.mode)
-            client.publish(Config.TOPIC_TELEMETRY, json.dumps(payload), qos=1)
+            safe_send(payload)
             sent += 1
             if sent <= 3 or sent % 10 == 0:
                 print(f"   Sent #{sent}: {payload}")
@@ -119,7 +149,7 @@ def main():
 
     client.loop_stop()
     client.disconnect()
-    print(f"\n✅ Published {sent} messages.")
+    print(f"\n✅ Published {sent} messages (including any buffered sends).")
 
 
 if __name__ == "__main__":

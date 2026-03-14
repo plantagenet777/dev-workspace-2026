@@ -291,6 +291,10 @@ make simulate
 # Interval: 3s | Warning ≥4.5, Critical ≥7.1 mm/s (ISO 10816-3) | Ctrl+C to stop
 ```
 
+### MQTT Telemetry Simulator
+
+`publish_mqtt_telemetry.py` publishes synthetic telemetry to `Config.TOPIC_TELEMETRY` with a local `deque(maxlen=1000)` buffer for offline periods and an MQTT Last Will (status topic `Config.TOPIC_STATUS` or `pump/status` set to `offline`, retain=True). On reconnect, buffered messages are flushed and status is updated to `online`; the sensor data generation logic is identical to the one used by the PdM engine.
+
 ---
 
 ## Environment Variables
